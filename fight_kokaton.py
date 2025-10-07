@@ -193,8 +193,8 @@ def main():
             
         for b, bomb in enumerate(bombs):
             for beam in MultiBeam: #課題2,リストのビーム全てに対して当たり判定
+                # ビームが爆弾に当たったら，爆弾を消す
                 if beam.rct.colliderect(bomb.rct):
-                    # ビームが爆弾に当たったら，爆弾を消す
                     beam = None
                     bombs[b] = None
                     bird.change_img(6, screen)
