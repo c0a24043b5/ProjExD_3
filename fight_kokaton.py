@@ -167,6 +167,7 @@ def main():
         bombs.append(bomb)
     beam = None  # ゲーム初期化時にはビームは存在しない
     score = Score()#課題1,Scoreインスタンス生成
+    MultiBeam = [] #課題2,複数ビーム用の空リスト
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -176,6 +177,7 @@ def main():
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                 # スペースキー押下でBeamクラスのインスタンス生成
                 beam = Beam(bird)
+                MultiBeam.append(beam) #課題2,ビームをリストに追加
         screen.blit(bg_img, [0, 0])
         
         for bomb in bombs:
@@ -190,7 +192,7 @@ def main():
                 return
             
         for b, bomb in enumerate(bombs):
-            if beam is not None:
+            for beam in MultiBeam: #課題2,リストのビーム全てに対して当たり判定
                 if beam.rct.colliderect(bomb.rct):
                     # ビームが爆弾に当たったら，爆弾を消す
                     beam = None
@@ -198,17 +200,20 @@ def main():
                     bird.change_img(6, screen)
                     score.score += 1 #課題1,スコアアップ
         bombs = [bomb for bomb in bombs if bomb is not None]
+        MultiBeam = [beam for beam in MultiBeam if beam is not None] #課題2,Noneを除去
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
-        if beam is not None:
+        for beam in MultiBeam: #課題2,リストのビーム全てを更新
             beam.update(screen)  
         for bomb in bombs:     
-            bomb.update(screen)
+            bomb.update(screen) 
         score.update(screen) #課題1,スコア表示
         pg.display.update()
         tmr += 1
         clock.tick(50)
+    
+    
 
 
 if __name__ == "__main__":
